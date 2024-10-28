@@ -5,8 +5,8 @@
 
 <template>
   <div>
-    <RouterView />
     <NavigationMenu />
+    <RouterView />
   </div>
 </template>
 
