@@ -1,13 +1,6 @@
 <script setup>
 
   import { ref } from 'vue';
-  import { RouterLink } from 'vue-router';
-
-  const isDropdownOpen = ref(false); //Dropdown state
-
-  function toggleDropdown() {
-    isDropdownOpen.value = !isDropdownOpen.value;
-  }
   
 </script>
 
@@ -17,18 +10,7 @@
 
       <div class="flex-1">
         <div>
-          <button 
-            @click="toggleDropdown" 
-            type="button" 
-            class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
-            Tracker
-          </button>
-          <div v-if="isDropdownOpen" class=" w-48 mt-2 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div class="py-1">
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">List</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Feed</a>
-            </div>
-          </div>
+
         </div>
       </div>
 
