@@ -1,5 +1,7 @@
 <script setup>
     import { ref } from 'vue';
+    import { notify } from '@kyvg/vue3-notification';
+    import { useRouter } from 'vue-router';
     import axios from 'axios';
     import FullnameInput from '@/components/inputs/signup/Fullname.vue';
     import UsernameInput from '@/components/inputs/signup/Username.vue';
@@ -21,6 +23,8 @@
     const number = ref('');
     const neighborhood = ref('');
     
+    const router = useRouter();
+
     const submitForm = async () => {
         const data = {
             fullname: fullname.value,
@@ -34,13 +38,25 @@
             neighborhood: neighborhood.value
         };
 
-        console.log(data);
-
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users', data);
             console.log('Account created:', response.data);
+
+            notify({
+                title: 'Conta criada com sucesso!',
+                text: 'Sua conta foi criada. Faça login usando seus dados.',
+                type: 'success',
+            });
+
+            router.push('/');
         } catch (error) {
             console.error('Error creating account:', error);
+
+            notify({
+                title: 'Erro ao criar conta!',
+                text: error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente.',
+                type: 'error',
+            });
         }
     };
 </script>
@@ -52,22 +68,23 @@
                 Create your own account now!
             </div>
         </div>
-        <div class="bg-blue-900 grid grid-cols-12 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
-            <FullnameInput v-model="fullname"/>
-            <UsernameInput v-model="username"/>
-            <PasswordInput v-model="password"/>
-            <EmailInput v-model="email"/>
-            <BirthdateInput v-model="birthdate"/>
-            <ZipcodeInput v-model="zipcode"/>
-            <AddressInput v-model="address"/>
-            <NumberInput v-model="number"/>
-            <NeighborhoodInput v-model="neighborhood"/>
-        </div>
-        <div>
-            <button @click="submitForm" class="bg-blue-900 rounded-xl shadow-lg mt-10 w-[15%] mx-auto p-6 font-bold text-2xl font-roboto bg-blue-600 hover:bg-blue-700">
-                Sign Up
-            </button>
-        </div>
+        <form @submit.prevent="submitForm" class="bg-blue-900 grid grid-cols-12 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
+            <FullnameInput v-model="fullname" />
+            <UsernameInput v-model="username" />
+            <PasswordInput v-model="password" />
+            <EmailInput v-model="email" />
+            <BirthdateInput v-model="birthdate" />
+            <ZipcodeInput v-model="zipcode" />
+            <AddressInput v-model="address" />
+            <NumberInput v-model="number" />
+            <NeighborhoodInput v-model="neighborhood" />
+
+            <div class="col-span-12 text-center mt-6">
+                <button type="submit" class="bg-blue-900 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-blue-600 hover:bg-blue-700">
+                    Sign Up
+                </button>
+            </div>
+        </form>
     </main>
 </template>
 

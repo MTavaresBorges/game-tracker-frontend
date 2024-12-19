@@ -7,6 +7,7 @@
   <div>
     <NavigationMenu />
     <RouterView />
+    <notifications />
   </div>
 </template>
 
