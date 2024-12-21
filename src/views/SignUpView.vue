@@ -48,7 +48,7 @@
                 type: 'success',
             });
 
-            router.push('/');
+            router.push('/signin');
         } catch (error) {
             console.error('Error creating account:', error);
 

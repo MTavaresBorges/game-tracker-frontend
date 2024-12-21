@@ -1,4 +1,44 @@
 <script setup>
+    import { ref } from 'vue';
+    import { notify } from '@kyvg/vue3-notification';
+    import { useRouter } from 'vue-router';
+    import { setAuthenticated } from '../utils/auth';
+    import axios from 'axios';
+    import EmailInput from '@/components/inputs/signup/Email.vue';
+    import PasswordInput from '@/components/inputs/signup/Password.vue';
+
+
+    const email = ref('');
+    const password = ref('');
+    const router = useRouter();
+
+    const submitForm = async () => {
+        const data = {
+            email: email.value,
+            password: password.value
+        };
+
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', data);
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            setAuthenticated(true);
+
+            notify({
+                title: 'Login realizado com sucesso!',
+                text: 'Bem vindo!!!',
+                type: 'success',
+            });
+            
+            router.push('/home');
+        } catch (error) {
+            notify({
+                title: 'Login falhou',
+                text: 'Verifique seus dados.',
+                type: 'error',
+            });
+        }
+    };
 
 </script>
 
@@ -9,20 +49,17 @@
                 Welcome!
             </div>
         </div>
-        <div class="bg-blue-900 grid grid-cols-12 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
-            <div class="col-span-12 flex flex-col">
-                <label class="text-lg mb-1 text-left w-full">Username</label>
-                <input v-model="username" type="text" placeholder="Type your username" class="p-2 rounded-lg w-full text-gray-600"/>
-            </div>
-            <div class="col-span-12 flex flex-col">
-                <label class="text-lg mb-1 text-left w-full">Password</label>
-                <input v-model="password" type="password" placeholder="Type your password" class="p-2 rounded-lg w-full text-gray-600"/>
-            </div>
-            <div class="col-span-12 text-center mt-6">
-                <button type="submit" class="bg-blue-900 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-blue-600 hover:bg-blue-700">
-                    Sign Up
-                </button>
-            </div>
+        <div class="bg-blue-900 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
+            <form @submit.prevent="submitForm">
+                <EmailInput v-model="email" />
+                <br>
+                <PasswordInput v-model="password" />
+                <div class="col-span-12 text-center mt-6">
+                    <button type="submit" class="bg-blue-900 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-blue-600 hover:bg-blue-700">
+                        Login
+                    </button>
+                </div>
+            </form>
         </div>
     </main>
 </template>
