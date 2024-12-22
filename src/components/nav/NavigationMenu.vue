@@ -1,7 +1,6 @@
 <script setup>
-
-  import { ref } from 'vue';
-  import { isAuthenticated, setAuthenticated } from '../utils/auth';
+  import { isAuthenticated, setAuthenticated } from '../../utils/auth';
+  import Sidebar from "@/components/nav/SidebarMenu.vue";
   import { useRouter } from 'vue-router';
   import axios from 'axios';
 
@@ -22,17 +21,17 @@
     }
   };
 
-  console.log(isAuthenticated.value);
-
 </script>
 
 <template>
   <header class="bg-blue-600 text-white shadow-md">
     <nav class="flex items-center justify-between p-4">
       <div class="flex-1">
-        <div>
-
-        </div>
+        <template v-if="isAuthenticated">
+          <div>
+            <Sidebar />
+          </div>
+        </template>
       </div>
 
       <RouterLink :to="{ name: 'home' }">

@@ -4,8 +4,8 @@
     import { useRouter } from 'vue-router';
     import { setAuthenticated } from '../utils/auth';
     import axios from 'axios';
-    import EmailInput from '@/components/inputs/signup/Email.vue';
-    import PasswordInput from '@/components/inputs/signup/Password.vue';
+    import EmailInput from '@/components/inputs/Email.vue';
+    import PasswordInput from '@/components/inputs/Password.vue';
 
 
     const email = ref('');

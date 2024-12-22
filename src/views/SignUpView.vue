@@ -3,15 +3,15 @@
     import { notify } from '@kyvg/vue3-notification';
     import { useRouter } from 'vue-router';
     import axios from 'axios';
-    import FullnameInput from '@/components/inputs/signup/Fullname.vue';
-    import UsernameInput from '@/components/inputs/signup/Username.vue';
-    import PasswordInput from '@/components/inputs/signup/Password.vue';
-    import EmailInput from '@/components/inputs/signup/Email.vue';
-    import BirthdateInput from '@/components/inputs/signup/Birthdate.vue';
-    import ZipcodeInput from '@/components/inputs/signup/Zipcode.vue';
-    import AddressInput from '@/components/inputs/signup/Address.vue';
-    import NumberInput from '@/components/inputs/signup/Number.vue';
-    import NeighborhoodInput from '@/components/inputs/signup/Neighborhood.vue';
+    import FullnameInput from '@/components/inputs/Fullname.vue';
+    import UsernameInput from '@/components/inputs/Username.vue';
+    import PasswordInput from '@/components/inputs/Password.vue';
+    import EmailInput from '@/components/inputs/Email.vue';
+    import BirthdateInput from '@/components/inputs/Birthdate.vue';
+    import ZipcodeInput from '@/components/inputs/Zipcode.vue';
+    import AddressInput from '@/components/inputs/Address.vue';
+    import NumberInput from '@/components/inputs/Number.vue';
+    import NeighborhoodInput from '@/components/inputs/Neighborhood.vue';
 
     const fullname = ref('');
     const username = ref('');
