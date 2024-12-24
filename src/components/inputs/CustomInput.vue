@@ -41,7 +41,7 @@ const inputValue = computed({
             :type="inputType"
             :placeholder="inputPlaceholder"
             v-model="inputValue"
-            class="p-2 rounded-lg w-full text-gray-600"
+            class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"
         />
   </div>
 </template>

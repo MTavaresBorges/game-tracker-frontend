@@ -43,8 +43,8 @@
             console.log('Account created:', response.data);
 
             notify({
-                title: 'Conta criada com sucesso!',
-                text: 'Sua conta foi criada. Faça login usando seus dados.',
+                title: 'Account created in successfully!',
+                text: 'Your account has been created, you can now log in.',
                 type: 'success',
             });
 
@@ -53,8 +53,8 @@
             console.error('Error creating account:', error);
 
             notify({
-                title: 'Erro ao criar conta!',
-                text: error.response?.data?.message || 'Ocorreu um erro inesperado. Tente novamente.',
+                title: 'Error creating account',
+                text: error.response?.data?.message || 'An unexpected error occurred. Try again later.',
                 type: 'error',
             });
         }
@@ -63,12 +63,12 @@
 
 <template>
     <main class="text-center container mx-auto text-white">
-        <div class="bg-blue-900 rounded-xl shadow-lg mt-10 w-[40%] mx-auto">
+        <div class="bg-gray-800 rounded-xl shadow-lg mt-10 w-[40%] mx-auto">
             <div class="p-6 font-bold text-2xl font-roboto">
                 Create your own account now!
             </div>
         </div>
-        <form @submit.prevent="submitForm" class="bg-blue-900 grid grid-cols-12 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
+        <form @submit.prevent="submitForm" class="bg-gray-800 grid grid-cols-12 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
             <FullnameInput v-model="fullname" />
             <UsernameInput v-model="username" />
             <PasswordInput v-model="password" />
@@ -80,7 +80,7 @@
             <NeighborhoodInput v-model="neighborhood" />
 
             <div class="col-span-12 text-center mt-6">
-                <button type="submit" class="bg-blue-900 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-blue-600 hover:bg-blue-700">
+                <button type="submit" class=" w-full transition duration-300 bg-gray-800 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-gray-700 hover:bg-gray-600">
                     Sign Up
                 </button>
             </div>

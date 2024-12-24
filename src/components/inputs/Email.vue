@@ -14,6 +14,6 @@ const updateValue = () => {
 <template>
     <div class="col-span-8 flex flex-col">
         <label class="text-lg mb-1 text-left w-full">Email</label>
-        <input v-model="email" @input="updateValue" type="email" placeholder="Type your email" class="p-2 rounded-lg w-full text-gray-600"/>
+        <input v-model="email" @input="updateValue" type="email" placeholder="Type your email" class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"/>
     </div>
 </template>

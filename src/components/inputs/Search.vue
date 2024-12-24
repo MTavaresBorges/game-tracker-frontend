@@ -12,6 +12,6 @@ const updateValue = () => {
 
 <template>
     <div class="col-span-6 flex flex-col">
-        <input v-model="search" @input="updateValue" placeholder="Type a game name" class="p-2 rounded-lg w-full text-gray-600"/>
+        <input v-model="search" @input="updateValue" placeholder="Type a game name" class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"/>
     </div>
 </template>

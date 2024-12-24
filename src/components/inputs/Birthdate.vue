@@ -13,6 +13,6 @@ const updateValue = () => {
 <template>
     <div class="col-span-4 flex flex-col">
         <label class="text-lg mb-1 text-left w-full">Birthdate</label>
-        <input v-model="birthdate" @input="updateValue" type="date" class="p-2 rounded-lg w-full text-gray-600"/>
+        <input v-model="birthdate" @input="updateValue" type="date" class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"/>
     </div>
 </template>

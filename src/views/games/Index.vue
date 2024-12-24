@@ -5,6 +5,7 @@
     const API_KEY = 'da6b190883654c9b91f542b733dc186c';
     const search = ref('');
     const games = ref([]);
+    const selectedGame = ref('');
 
     async function fetchGames(){
         if (!search.value.trim()) return;
@@ -15,21 +16,45 @@
 
         games.value = data.results || [];
     }
+
+    async function selectGame (game) { //Just to fetch the game description
+        const response = await fetch(`https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`);
+        const gameDetails = await response.json();
+        selectedGame.value = { ...game, description: gameDetails.description_raw };
+    }
+    
 </script>
 
 <template>
     <div class="flex justify-center">
-        <div class="flex flex-col justify-center rounded-md bg-blue-900 shadow-lg mt-10 text-center rounded-2xl w-[50%] h-[400px]">
+        <div class="flex flex-col justify-center rounded-md bg-gray-800 shadow-lg p-4 mt-10 text-center rounded-2xl shadow-2xl w-[900px] h-auto">
             <h1 class="text-2xl font-bold text-white">Search for your games!!!</h1>
             <p class="text-white">Just type the game name that you'd like to add</p>
             <SearchInput class="mt-4 w-1/2 mx-auto" v-model="search" @input="fetchGames" />
-
-            <div class="mt-4">
+            <div v-if="games.length && search" class="mx-auto mt-4 overflow-y-auto h-32 w-3/4 bg-white rounded-lg p-2">
                 <ul>
-                    <li v-for="game in games" :key="game.id">
-                        {{ game.id }}
+                    <li v-for="game in games" :key="game.id" class="text-black">
+                        <button 
+                            class="w-full text-left px-2 py-1 hover:bg-blue-300 rounded-lg"
+                            @click="selectGame(game)"
+                        >
+                            {{ game.name }}
+                        </button>
                     </li>
                 </ul>
+            </div>
+            <img :src="selectedGame.background_image" :alt="selectedGame.name" class="m-10 rounded-lg">
+            <div v-if="selectedGame" class="flex">
+                <div class="ml-4 text-left">
+                    <p class="text-white text-lg font-bold">Name: <span class="text-white font-normal">{{ selectedGame.name }}</span></p>
+                    <p class="text-white text-lg font-bold">Released: <span class="text-white font-normal">{{ selectedGame.released }}</span></p>
+                    <p class="text-white text-lg font-bold">{{ selectedGame.metacritc != null ? 'Metacritic: ' : 'Score : ' }} <span class="text-white font-normal">{{ selectedGame.metacritic ? selectedGame.metacritic : selectedGame.rating }}</span></p>
+                    <p class="text-white text-lg font-bold">ESRB Rating: <span class="text-white font-normal">{{ selectedGame.esrb_rating ? selectedGame.esrb_rating.name : 'None' }}</span></p>
+                    <p class="text-white text-lg font-bold">Platform: <span class="text-white font-normal">{{ selectedGame.parent_platforms.map((platform) => platform.platform.name).join(', ') }}</span></p>
+                    <p class="text-white text-lg font-bold">Genre: <span class="text-white font-normal">{{ selectedGame.genres.map((genre) => genre.name).join(', ') }}</span></p>
+                    <!-- <p class="text-white text-lg font-bold">Tags: {{ selectedGame.tags.map((tag) => tag.name).join(', ') }}</p> -->
+                    <p class="text-white text-lg font-bold mt-4">Description: <span class="text-white font-normal">{{ selectedGame.description ? selectedGame.description : 'None' }}</span></p>
+                </div>
             </div>
         </div>
     </div>
