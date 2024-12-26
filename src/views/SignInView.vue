@@ -55,7 +55,7 @@
                 <br>
                 <PasswordInput v-model="password" />
                 <div class="col-span-12 text-center mt-6">
-                    <button type="submit" class="w-full transition duration-300 bg-gray-800 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-gray-700 hover:bg-gray-600">
+                    <button type="submit" class="w-full transition duration-300 bg-gray-700 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-gray-700 hover:bg-gray-600">
                         Login
                     </button>
                 </div>
