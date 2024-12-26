@@ -1,6 +1,7 @@
 <script setup>
     import { ref } from 'vue';
     import SearchInput from '@/components/inputs/Search.vue';
+    import 'primeicons/primeicons.css';
     
     const API_KEY = 'da6b190883654c9b91f542b733dc186c';
     const search = ref('');
@@ -12,15 +13,17 @@
 
         const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${search.value}`);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         games.value = data.results || [];
     }
 
-    async function selectGame (game) { //Just to fetch the game description
+    async function selectGame (game) { //Just to fetch the game description.
         const response = await fetch(`https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`);
         const gameDetails = await response.json();
-        selectedGame.value = { ...game, description: gameDetails.description_raw };
+        console.log(gameDetails);
+        selectedGame.value = { ...game, description: gameDetails.description_raw, developers: gameDetails.developers, publishers: gameDetails.publishers };
+        search.value = ''; //Just to make the search results dissapear.
     }
     
 </script>
@@ -46,13 +49,32 @@
             <img :src="selectedGame.background_image" :alt="selectedGame.name" class="m-10 rounded-lg">
             <div v-if="selectedGame" class="flex">
                 <div class="ml-4 text-left">
-                    <p class="text-white text-lg font-bold">Name: <span class="text-white font-normal">{{ selectedGame.name }}</span></p>
-                    <p class="text-white text-lg font-bold">Released: <span class="text-white font-normal">{{ selectedGame.released }}</span></p>
-                    <p class="text-white text-lg font-bold">{{ selectedGame.metacritc != null ? 'Metacritic: ' : 'Score : ' }} <span class="text-white font-normal">{{ selectedGame.metacritic ? selectedGame.metacritic : selectedGame.rating }}</span></p>
-                    <p class="text-white text-lg font-bold">ESRB Rating: <span class="text-white font-normal">{{ selectedGame.esrb_rating ? selectedGame.esrb_rating.name : 'None' }}</span></p>
-                    <p class="text-white text-lg font-bold">Platform: <span class="text-white font-normal">{{ selectedGame.parent_platforms.map((platform) => platform.platform.name).join(', ') }}</span></p>
-                    <p class="text-white text-lg font-bold">Genre: <span class="text-white font-normal">{{ selectedGame.genres.map((genre) => genre.name).join(', ') }}</span></p>
-                    <!-- <p class="text-white text-lg font-bold">Tags: {{ selectedGame.tags.map((tag) => tag.name).join(', ') }}</p> -->
+                    <div class="flex grid grid-cols-12">
+                    <div class="col-span-6">
+                        <p class="text-white text-lg font-bold">Name: <span class="text-white font-normal">{{ selectedGame.name }}</span></p>
+                        <p class="text-white text-lg font-bold">Developer: <span class="text-white font-normal">{{ selectedGame.developers.map((developer) => developer.name).join(', ') }}</span></p>
+                        <p class="text-white text-lg font-bold">Publisher: <span class="text-white font-normal">{{ selectedGame.publishers.map((publisher) => publisher.name).join(', ') }}</span></p>
+                        <p class="text-white text-lg font-bold">Released: <span class="text-white font-normal">{{ selectedGame.released }}</span></p>
+                        <p class="text-white text-lg font-bold">{{ selectedGame.metacritc != null ? 'Metacritic: ' : 'Score : ' }} <span class="text-white font-normal">{{ selectedGame.metacritic ? selectedGame.metacritic : selectedGame.rating }}</span></p>
+                        <p class="text-white text-lg font-bold">ESRB Rating: <span class="text-white font-normal">{{ selectedGame.esrb_rating ? selectedGame.esrb_rating.name : 'None' }}</span></p>
+                        <p class="text-white text-lg font-bold">Platform: <span class="text-white font-normal">{{ selectedGame.parent_platforms.map((platform) => platform.platform.name).join(', ') }}</span></p>
+                        <p class="text-white text-lg font-bold">Genre: <span class="text-white font-normal">{{ selectedGame.genres.map((genre) => genre.name).join(', ') }}</span></p>
+                    </div>
+                    <div class="col-span-3 flex h-16 align-items justify-center">
+                        <button class="px-4 py-2 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white">
+                            <i class="pi pi-plus text-lg cursor-pointer mr-2"></i>
+                            Add game to a list
+                        </button>
+                    </div>
+
+                    <div class="col-span-3 flex h-16 align-items justify-center">
+                        <button class="px-4 py-2 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white">
+                            <i class="pi pi-check text-lg cursor-pointer mr-2"></i>
+                            Mark as Beaten
+                        </button>
+                    </div>
+
+                    </div>
                     <p class="text-white text-lg font-bold mt-4">Description: <span class="text-white font-normal">{{ selectedGame.description ? selectedGame.description : 'None' }}</span></p>
                 </div>
             </div>
