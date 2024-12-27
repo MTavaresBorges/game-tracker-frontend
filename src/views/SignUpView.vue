@@ -25,6 +25,28 @@
     
     const router = useRouter();
 
+    const fetchAddressFromCep = async () => {
+        const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://viacep.com.br/ws/${zipcode.value}/json/`);
+        if (response.data.erro) {
+            notify({
+                title: 'Invalid CEP',
+                text: 'The provided CEP was not found.',
+                type: 'error',
+            });
+            return;
+        }
+
+        address.value = response.data.logradouro || '';
+        neighborhood.value = response.data.bairro || '';
+        console.log('Address:', address.value);
+        console.log('Neighborhood:', neighborhood.value);
+        notify({
+            title: 'Address updated',
+            text: 'Address fields were filled automatically.',
+            type: 'success',
+        });
+    };
+
     const submitForm = async () => {
         const data = {
             fullname: fullname.value,
@@ -76,7 +98,7 @@
             <PasswordInput v-model="password" />
             <EmailInput v-model="email" />
             <BirthdateInput v-model="birthdate" />
-            <ZipcodeInput v-model="zipcode" />
+            <ZipcodeInput v-model="zipcode" @input="fetchAddressFromCep"/>
             <AddressInput v-model="address" />
             <NumberInput v-model="number" />
             <NeighborhoodInput v-model="neighborhood" />

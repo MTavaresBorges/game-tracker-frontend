@@ -1,18 +1,20 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
-const address = ref('');
+defineProps({
+    modelValue: String
+});
 
-const emit = defineEmits();
+const emit = defineEmits(['update:modelValue']);
 
 const updateValue = () => {
-    emit('update:modelValue', address.value);
+    emit('update:modelValue', event.target.value);
 };
 </script>
 
 <template>
     <div class="col-span-8 flex flex-col">
         <label class="text-lg mb-1 text-left w-full">Address</label>
-        <input v-model="address" @input="updateValue" type="text" placeholder="Type your address" class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"/>
+        <input @input="updateValue" type="text" placeholder="Type your address" class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"/>
     </div>
 </template>
