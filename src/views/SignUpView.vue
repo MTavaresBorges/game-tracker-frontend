@@ -25,8 +25,12 @@
     
     const router = useRouter();
 
+    const normalizeCep = (cep) => cep.replace(/\D/g, '');
+
     const fetchAddressFromCep = async () => {
-        const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://viacep.com.br/ws/${zipcode.value}/json/`);
+        const normalizedCep = normalizeCep(zipcode.value);
+        const response = await axios.get(`/api-cep/ws/${normalizedCep}/json`);
+
         if (response.data.erro) {
             notify({
                 title: 'Invalid CEP',
@@ -38,8 +42,7 @@
 
         address.value = response.data.logradouro || '';
         neighborhood.value = response.data.bairro || '';
-        console.log('Address:', address.value);
-        console.log('Neighborhood:', neighborhood.value);
+
         notify({
             title: 'Address updated',
             text: 'Address fields were filled automatically.',
