@@ -9,9 +9,11 @@
     import EmailInput from '@/components/inputs/Email.vue';
     import BirthdateInput from '@/components/inputs/Birthdate.vue';
     import ZipcodeInput from '@/components/inputs/Zipcode.vue';
-    import AddressInput from '@/components/inputs/Address.vue';
+    import StreetInput from '@/components/inputs/Street.vue';
     import NumberInput from '@/components/inputs/Number.vue';
     import NeighborhoodInput from '@/components/inputs/Neighborhood.vue';
+    import StateInput from '@/components/inputs/State.vue';
+    import CityInput from '@/components/inputs/City.vue';
 
     const fullname = ref('');
     const username = ref('');
@@ -19,9 +21,11 @@
     const email = ref('');
     const birthdate = ref('');
     const zipcode = ref('');
-    const address = ref('');
+    const street = ref('');
     const number = ref('');
     const neighborhood = ref('');
+    const state = ref('');
+    const city = ref('');
     
     const router = useRouter();
 
@@ -29,25 +33,14 @@
 
     const fetchAddressFromCep = async () => {
         const normalizedCep = normalizeCep(zipcode.value);
-        const response = await axios.get(`/api-cep/ws/${normalizedCep}/json`);
-
-        if (response.data.erro) {
-            notify({
-                title: 'Invalid CEP',
-                text: 'The provided CEP was not found.',
-                type: 'error',
-            });
-            return;
+        if(normalizedCep.length === 8){
+            const response = await axios.get(`/api-cep/ws/${normalizedCep}/json`);
+    
+            street.value = response.data.logradouro || '';
+            neighborhood.value = response.data.bairro || '';
+            state.value = response.data.uf || '';
+            city.value = response.data.localidade || '';
         }
-
-        address.value = response.data.logradouro || '';
-        neighborhood.value = response.data.bairro || '';
-
-        notify({
-            title: 'Address updated',
-            text: 'Address fields were filled automatically.',
-            type: 'success',
-        });
     };
 
     const submitForm = async () => {
@@ -58,9 +51,11 @@
             email: email.value,
             birthdate: birthdate.value,
             zipcode: zipcode.value,
-            address: address.value,
-            number: number.value,
-            neighborhood: neighborhood.value
+            street: street.value,
+            number: number.value.toString(),
+            neighborhood: neighborhood.value,
+            state: state.value,
+            city: city.value
         };
 
         try {
@@ -85,7 +80,6 @@
         }
     };
 
-
 </script>
 
 <template>
@@ -102,12 +96,14 @@
             <EmailInput v-model="email" />
             <BirthdateInput v-model="birthdate" />
             <ZipcodeInput v-model="zipcode" @input="fetchAddressFromCep"/>
-            <AddressInput v-model="address" />
+            <StreetInput v-model="street" />
+            <CityInput v-model="city" />
             <NumberInput v-model="number" />
             <NeighborhoodInput v-model="neighborhood" />
+            <StateInput v-model="state" />
 
             <div class="col-span-12 text-center mt-6">
-                <button type="submit" class=" w-full transition duration-300 bg-gray-800 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-gray-700 hover:bg-gray-600">
+                <button type="submit" class=" w-full transition duration-300 bg-gray-700 rounded-xl shadow-lg w-[30%] mx-auto p-6 font-bold text-2xl font-roboto bg-gray-700 hover:bg-gray-600">
                     Sign Up
                 </button>
             </div>
