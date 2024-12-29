@@ -1,5 +1,5 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
     import { notify } from '@kyvg/vue3-notification';
     import { useRouter } from 'vue-router';
     import axios from 'axios';
@@ -25,21 +25,44 @@
     const number = ref('');
     const neighborhood = ref('');
     const state = ref('');
+    const stateId = ref('');
     const city = ref('');
+    const states = ref([]);
     
     const router = useRouter();
+
+    onMounted(async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/states');
+            states.value = response.data;
+        } catch (error) {
+            console.error("Erro ao carregar os estados:", error);
+        }
+    });
 
     const normalizeCep = (cep) => cep.replace(/\D/g, '');
 
     const fetchAddressFromCep = async () => {
         const normalizedCep = normalizeCep(zipcode.value);
-        if(normalizedCep.length === 8){
-            const response = await axios.get(`/api-cep/ws/${normalizedCep}/json`);
-    
-            street.value = response.data.logradouro || '';
-            neighborhood.value = response.data.bairro || '';
-            state.value = response.data.uf || '';
-            city.value = response.data.localidade || '';
+        if (normalizedCep.length === 8) {
+            try {
+                const response = await axios.get(`/api-cep/ws/${normalizedCep}/json`);
+                street.value = response.data.logradouro || '';
+                neighborhood.value = response.data.bairro || '';
+                state.value = response.data.uf || ''; 
+                city.value = response.data.localidade || '';
+
+                // Logic to sync the found state with the database state.
+                const foundState = states.value.find((s) => s.uf === state.value);
+                if (foundState) {
+                    stateId.value = foundState.id;
+                } else {
+                    stateId.value = null;
+                    console.warn("Estado não encontrado para o UF:", state.value);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar endereço pelo CEP:", error);
+            }
         }
     };
 
@@ -50,13 +73,18 @@
             password: password.value,
             email: email.value,
             birthdate: birthdate.value,
-            zipcode: zipcode.value,
-            street: street.value,
-            number: number.value.toString(),
-            neighborhood: neighborhood.value,
-            state: state.value,
-            city: city.value
+            address: {
+                zipcode: zipcode.value,
+                street: street.value,
+                number: number.value.toString(),
+                neighborhood: neighborhood.value,
+                state: state.value,
+                state_id: stateId.value,
+                city: city.value,
+            }
         };
+
+        console.log(data);
 
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users', data);
