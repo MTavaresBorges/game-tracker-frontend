@@ -19,3 +19,17 @@ const updateValue = (event) => {
         <input @input="updateValue" :value="modelValue" type="number" maxlength="8" placeholder="Type your zipcode" class="bg-gray-200 p-2 rounded-lg w-full text-gray-600"/>
     </div>
 </template>
+
+<style scoped>
+/* Remove as setas no Chrome, Safari e Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove as setas no Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+</style>
