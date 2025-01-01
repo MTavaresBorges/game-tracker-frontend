@@ -1,12 +1,22 @@
 <script setup>
     import { ref } from 'vue';
     import SearchInput from '@/components/inputs/Search.vue';
+    import BeatenModal from '@/components/modals/AddBeatenGameModal.vue';
     import 'primeicons/primeicons.css';
     
     const API_KEY = 'da6b190883654c9b91f542b733dc186c';
     const search = ref('');
     const games = ref([]);
     const selectedGame = ref('');
+    const isModalVisible = ref(false);
+
+    function openModal() {
+        isModalVisible.value = true;
+    }
+
+    function closeModal() {
+        isModalVisible.value = false;
+    }
 
     async function fetchGames(){
         if (!search.value.trim()) return;
@@ -24,6 +34,40 @@
         console.log(gameDetails);
         selectedGame.value = { ...game, description: gameDetails.description_raw, developers: gameDetails.developers, publishers: gameDetails.publishers };
         search.value = ''; //Just to make the search results dissapear.
+    }
+
+    async function addGame(isMain) {
+        console.log('isMain Value:', isMain);
+        const data = {
+            game: {
+                name: selectedGame.value.name,
+                release_date: selectedGame.value.released,
+                score: selectedGame.value.rating,
+                age_rating: selectedGame.value.esrb_rating ? selectedGame.value.esrb_rating.name : 'None',
+                description: selectedGame.value.description_raw,
+            },
+            image: {
+                url: selectedGame.value.background_image,
+                order: 1
+            },
+            genre:{
+                name: selectedGame.value.genres.map((genre) => genre.name).join(', ')
+            },
+            platform: {
+                name: selectedGame.value.platforms.map((platform) => platform.platform.name).join(', ')
+            },
+            companies: {
+                developers: selectedGame.value.developers.map((developer) => developer.name).join(', '),
+                publishers: selectedGame.value.publishers.map((publisher) => publisher.name).join(', ')
+            },
+            pivot: {
+                isMain: isMain,
+                status: 'Beaten'
+            }
+        }
+        // console.log(selectedGame.value);
+        // const data = selectedGame.value;
+        // const response = await axios.post('http://127.0.0.1:8000/api/games', data);
     }
     
 </script>
@@ -68,7 +112,7 @@
                     </div>
 
                     <div class="col-span-3 flex h-16 align-items justify-center">
-                        <button class="px-4 py-2 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white">
+                        <button @click="openModal"  class="px-4 py-2 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white">
                             <i class="pi pi-check text-lg cursor-pointer mr-2"></i>
                             Mark as Beaten
                         </button>
@@ -79,5 +123,14 @@
                 </div>
             </div>
         </div>
+        <BeatenModal :modalActive="isModalVisible" @close-modal="closeModal">
+            <template #default>
+                <h2 class="text-lg font-bold">Confirm Game Addition</h2>
+                <p>Are you sure you want to add this game to your beaten list?</p>
+                <button class="bg-green-500 text-white py-2 px-4 rounded mt-4" @click="addGame(1); closeModal()">
+                    Add
+                </button>
+            </template>
+        </BeatenModal>
     </div>
 </template>
