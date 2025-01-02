@@ -1,13 +1,16 @@
 <script setup>
     import { ref } from 'vue';
+    import axios from 'axios';
     import SearchInput from '@/components/inputs/Search.vue';
     import BeatenModal from '@/components/modals/AddBeatenGameModal.vue';
+    import DateInput from '@/components/inputs/Birthdate.vue';
     import 'primeicons/primeicons.css';
     
     const API_KEY = 'da6b190883654c9b91f542b733dc186c';
     const search = ref('');
     const games = ref([]);
     const selectedGame = ref('');
+    const date = ref('');
     const isModalVisible = ref(false);
 
     function openModal() {
@@ -23,7 +26,6 @@
 
         const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${search.value}`);
         const data = await response.json();
-        // console.log(data);
 
         games.value = data.results || [];
     }
@@ -37,37 +39,51 @@
     }
 
     async function addGame(isMain) {
-        console.log('isMain Value:', isMain);
+        console.log('Date: ', date.value);
         const data = {
             game: {
                 name: selectedGame.value.name,
                 release_date: selectedGame.value.released,
                 score: selectedGame.value.rating,
                 age_rating: selectedGame.value.esrb_rating ? selectedGame.value.esrb_rating.name : 'None',
-                description: selectedGame.value.description_raw,
+                description: selectedGame.value.description,
             },
-            image: {
-                url: selectedGame.value.background_image,
-                order: 1
-            },
-            genre:{
-                name: selectedGame.value.genres.map((genre) => genre.name).join(', ')
-            },
-            platform: {
-                name: selectedGame.value.platforms.map((platform) => platform.platform.name).join(', ')
-            },
-            companies: {
-                developers: selectedGame.value.developers.map((developer) => developer.name).join(', '),
-                publishers: selectedGame.value.publishers.map((publisher) => publisher.name).join(', ')
-            },
+            images: [
+                {
+                    url: selectedGame.value.background_image,
+                    order: 1,
+                },
+            ],
+            genres: selectedGame.value.genres.map((genre) => ({
+                name: genre.name,
+            })),
+            platforms: selectedGame.value.platforms.map((platform) => ({
+                name: platform.platform.name,
+            })),
+            companies: [
+                ...selectedGame.value.developers.map((developer) => ({
+                    name: developer.name,
+                    type: 'Developer',
+                })),
+                ...selectedGame.value.publishers.map((publisher) => ({
+                    name: publisher.name,
+                    type: 'Publisher',
+                }))
+            ],
             pivot: {
                 isMain: isMain,
-                status: 'Beaten'
+                status: 'Beaten',
+                beaten_at: date.value,
+            },
+        };
+
+        const response = await axios.post('http://127.0.0.1:8000/api/games', data,
+            {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
             }
-        }
-        // console.log(selectedGame.value);
-        // const data = selectedGame.value;
-        // const response = await axios.post('http://127.0.0.1:8000/api/games', data);
+        });
+        console.log("Game Added: ", response.data);
     }
     
 </script>
@@ -125,9 +141,10 @@
         </div>
         <BeatenModal :modalActive="isModalVisible" @close-modal="closeModal">
             <template #default>
-                <h2 class="text-lg font-bold">Confirm Game Addition</h2>
-                <p>Are you sure you want to add this game to your beaten list?</p>
-                <button class="bg-green-500 text-white py-2 px-4 rounded mt-4" @click="addGame(1); closeModal()">
+                <h2 class="text-lg font-bold">When did you beaten this game?</h2>
+                <p>If you don't remember the date, you can let it blank.</p>
+                <DateInput v-model="date" label="Choose a date: " class="mt-8"/>
+                <button class="bg-gray-800 rounded-xl hover:bg-gray-600 transition duration-300 text-white py-2 px-4 rounded mt-4" @click="addGame(1); closeModal()">
                     Add
                 </button>
             </template>

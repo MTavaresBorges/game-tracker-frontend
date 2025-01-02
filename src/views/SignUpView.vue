@@ -88,7 +88,6 @@
 
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users', data);
-            console.log('Account created:', response.data);
 
             notify({
                 title: 'Account created in successfully!',
@@ -122,7 +121,7 @@
             <UsernameInput v-model="username" />
             <PasswordInput v-model="password" />
             <EmailInput v-model="email" />
-            <BirthdateInput v-model="birthdate" />
+            <BirthdateInput v-model="birthdate" label="Birthdate" />
             <ZipcodeInput v-model="zipcode" @input="fetchAddressFromCep"/>
             <StreetInput v-model="street" />
             <CityInput v-model="city" />

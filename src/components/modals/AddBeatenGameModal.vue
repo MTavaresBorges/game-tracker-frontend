@@ -13,9 +13,9 @@
         <Transition name="modal-outer">
             <div v-show="modalActive" class="absolute w-full bg-black bg-opacity-30 h-screen top-0 left-0 flex justify-center px-8">
                 <Transition name="modal-inner">
-                    <div v-if="modalActive" class="p-4 bg-white self-start mt-[50%] max-w-screen-md">
+                    <div v-if="modalActive" class="p-4 bg-gray-700 rounded-xl shadow-2xl text-white self-start self-start mt-[400px] max-w-screen-md">
                         <slot />
-                        <button class="text-white mt-8 bg-weather-primary py-2 px-6" @click="$emit('close-modal')">Close</button>
+                        <button class="bg-gray-800 rounded-xl ml-4 hover:bg-gray-600 transition duration-300 text-white mt-8 py-2 px-6" @click="$emit('close-modal')">Close</button>
                     </div>
                 </Transition>
             </div>
