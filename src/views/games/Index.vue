@@ -1,5 +1,6 @@
 <script setup>
     import { ref } from 'vue';
+    import { notify } from '@kyvg/vue3-notification';
     import axios from 'axios';
     import SearchInput from '@/components/inputs/Search.vue';
     import BeatenModal from '@/components/modals/AddBeatenGameModal.vue';
@@ -83,6 +84,13 @@
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         });
+        
+        notify({
+            title: 'The game has been added!',
+            text: isMain === 1 ? 'Has been added to Beaten Games list.' : 'Has been added to your list.',
+            type: 'success',
+        });
+
         console.log("Game Added: ", response.data);
     }
     

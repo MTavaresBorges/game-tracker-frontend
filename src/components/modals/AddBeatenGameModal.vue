@@ -11,7 +11,7 @@
 <template>
     <Teleport to="body">
         <Transition name="modal-outer">
-            <div v-show="modalActive" class="absolute w-full bg-black bg-opacity-30 h-screen top-0 left-0 flex justify-center px-8">
+            <div v-show="modalActive" class="fixed w-full bg-black bg-opacity-30 h-screen top-0 left-0 flex items-center justify-center px-8">
                 <Transition name="modal-inner">
                     <div v-if="modalActive" class="p-4 bg-gray-700 rounded-xl shadow-2xl text-white self-start self-start mt-[400px] max-w-screen-md">
                         <slot />
