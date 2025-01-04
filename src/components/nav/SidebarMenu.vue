@@ -25,8 +25,9 @@
             :class="isOpen ? 'max-h-[300px] max-w-[150px] opacity-100' : 'max-h-0 opacity-0'"
             >
             <ul class="p-4">
-                <li class="p-2 text-gray-700 hover:text-blue-900 hover:bg-blue-200 rounded-xl cursor-pointer transition duration-300">
-                    <RouterLink :to="{ name: 'games' }" @click="isOpen = false">Find Games</RouterLink>
+                <li class="text-gray-700 hover:text-blue-900">
+                    <RouterLink class="p-1 hover:bg-blue-200 rounded-xl cursor-pointer transition duration-300 flex" :to="{ name: 'games' }" @click="isOpen = false">Find Games</RouterLink>
+                    <RouterLink class="p-1 hover:bg-blue-200 rounded-xl cursor-pointer transition duration-300 flex" :to="{ name: 'libraries' }" @click="isOpen = false">My Libraries</RouterLink>
                 </li>
             </ul>
         </div>

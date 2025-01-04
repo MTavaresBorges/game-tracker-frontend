@@ -3,11 +3,13 @@ import HomeView from '../views/HomeView.vue'
 import SignUpView from '@/views/SignUpView.vue';
 import SignInView from '@/views/SignInView.vue';
 import gameRoutes from './gameRoutes';
+import libraryRoutes from './libraryRoutes';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    ...gameRoutes,
+    ...gameRoutes, 
+    ...libraryRoutes,
     {
       path: '/',
       name: 'home',
