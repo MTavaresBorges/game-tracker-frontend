@@ -1,4 +1,5 @@
 import LibraryIndex from '@/views/library/Index.vue';
+import LibraryCreate from '@/views/library/Create.vue';
 
 export default [
     {
@@ -9,4 +10,13 @@ export default [
         requiresAuth: true
       }
     },
+    {
+      path: '/libraries/create',
+      name: 'library-create',
+      component: LibraryCreate,
+      meta: {
+        requiresAuth: true
+      }
+    }
+
   ];
