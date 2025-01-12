@@ -13,11 +13,10 @@
         <Transition name="modal-outer">
             <div v-show="modalActive" class="fixed w-full bg-black bg-opacity-30 h-screen top-0 left-0 flex items-center justify-center px-8">
                 <Transition name="modal-inner">
-                    <div v-if="modalActive" class="p-4 bg-gray-800 rounded-xl shadow-2xl text-white self-start self-start mt-[400px] max-w-screen-md">
-                        <h2 class="text-lg font-bold">When did you beaten this game?</h2>
-                        <p>If you don't remember the date, you can let it blank.</p>
+                    <div v-if="modalActive" class="flex grid grid-cols-12 p-4 bg-gray-800 rounded-xl shadow-2xl text-white self-start self-start mt-[400px] w-[500px]">
+                        <h2 class="text-lg font-bold mb-4 col-span-12">Are you sure you want to delete this game from your library?</h2>
                         <slot />
-                        <button class="bg-gray-700 rounded-xl ml-4 hover:bg-gray-600 transition duration-300 text-white mt-8 py-2 px-6" @click="$emit('close-modal')">Close</button>
+                        <button class="ml-1 col-span-6 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white mt-8 py-2 px-6" @click="$emit('close-modal')">Close</button>
                     </div>
                 </Transition>
             </div>

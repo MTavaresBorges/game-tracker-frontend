@@ -1,5 +1,5 @@
 import LibraryIndex from '@/views/library/Index.vue';
-import LibraryCreate from '@/views/library/Create.vue';
+import LibraryEdit from '@/views/library/Edit.vue';
 
 export default [
     {
@@ -11,9 +11,9 @@ export default [
       }
     },
     {
-      path: '/libraries/create',
-      name: 'library-create',
-      component: LibraryCreate,
+      path: '/libraries/:id/edit',
+      name: 'library-edit',
+      component: LibraryEdit,
       meta: {
         requiresAuth: true
       }

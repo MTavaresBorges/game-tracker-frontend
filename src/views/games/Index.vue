@@ -98,7 +98,7 @@
 
 <template>
     <div class="flex justify-center">
-        <div class="flex flex-col justify-center rounded-md bg-gray-800 shadow-lg p-4 mt-10 text-center rounded-2xl shadow-2xl w-[900px] h-auto">
+        <div class="flex flex-col justify-center rounded-xl bg-gray-800 shadow-lg p-4 mt-10 text-center rounded-2xl shadow-2xl w-[900px] h-auto">
             <h1 class="text-2xl font-bold text-white">Search for your games!!!</h1>
             <p class="text-white">Just type the game name that you'd like to add</p>
             <SearchInput class="mt-4 w-1/2 mx-auto" v-model="search" @input="fetchGames" />
@@ -149,10 +149,8 @@
         </div>
         <BeatenModal :modalActive="isModalVisible" @close-modal="closeModal">
             <template #default>
-                <h2 class="text-lg font-bold">When did you beaten this game?</h2>
-                <p>If you don't remember the date, you can let it blank.</p>
                 <DateInput v-model="date" label="Choose a date: " class="mt-8"/>
-                <button class="bg-gray-800 rounded-xl hover:bg-gray-600 transition duration-300 text-white py-2 px-4 rounded mt-4" @click="addGame(1); closeModal()">
+                <button class="bg-gray-700 rounded-xl hover:bg-green-800 transition duration-300 text-white py-2 px-4 rounded mt-4" @click="addGame(1); closeModal()">
                     Add
                 </button>
             </template>
