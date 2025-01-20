@@ -8,10 +8,11 @@
     import ImageInput from '@/components/inputs/libraries/Image.vue';
     import GameInfoModal from '@/components/modals/GameInfoModal.vue';
     import DisattachModal from '@/components/modals/DisattachGameModal.vue';
-
     import axios from 'axios';
 
-    const library = ref([]);
+    const library = ref({
+        games: [],
+    });
     const name = ref('');
     const description = ref('');
     const file = ref(null);
@@ -52,6 +53,9 @@
                 }
             });
             library.value = response.data;
+            name.value = library.value.name;
+            description.value = library.value.description;
+            // console.log(library);
         }catch(error){
             console.error(error);
         }
@@ -61,6 +65,48 @@
         if (!date) return '';
         const parsedDate = new Date(date);
         return parsedDate.toLocaleDateString('en-US');
+    }
+
+    async function updateLibrary() {
+        //TODO: Fix this, images must be stored in the database.
+        // const formData = new FormData();
+        // formData.append('name', name.value);
+        // formData.append('description', description.value);
+
+        const data = {
+            name: name.value,
+            description: description.value,
+        };
+
+        // if (file.value) {
+        //     formData.append('file', file.value);
+        // }
+
+        if (!name.value || !description.value) {
+            notify({
+                title: 'Please fill out all fields',
+                type: 'error',
+            });
+            return;
+        }
+        
+        try {
+            await axios.put(`http://127.0.0.1:8000/api/libraries/${id}`, data, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                }
+            });
+
+            notify({
+                title: 'Library updated successfully',
+                type: 'success',
+            });
+
+            
+            library.value = data;
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function removeGame(id){
@@ -82,17 +128,20 @@
             console.error(error);
         }
     }
-    
-    console.log(library);
 </script>
 
 <template>
     <h1 class="p-6 text-2xl font-bold text-white text-center">{{ library.name }} Library</h1>
     <div class="flex justify-center text-center text-white grid grid-cols-12">
-        <div class="p-4 bg-gray-800 rounded-xl shadow-lg mt-10 w-[500px] mx-auto col-span-12">
-            <NameInput v-model="name"/>
-            <DescriptionInput v-model="description" />
-            <ImageInput v-model="file"/>
+        <div class="p-6 bg-gray-800 rounded-xl shadow-lg mt-10 w-[500px] mx-auto col-span-12">
+            <form @submit.prevent="updateLibrary">
+                <NameInput v-model="name"/>
+                <DescriptionInput v-model="description" />
+                <ImageInput v-model="file"/>
+                <button type="submit" class="w-[200px] bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white mt-8 py-2 px-6">
+                    Update Library
+                </button>
+            </form>
         </div>
         <div class="col-span-12 mx-auto">
             <RouterLink :to="{ name: 'games' }">

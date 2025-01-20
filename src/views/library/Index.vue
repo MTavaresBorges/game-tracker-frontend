@@ -82,7 +82,8 @@
         try{ // Create the library
             await axios.post('http://127.0.0.1:8000/api/libraries', formData, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type' : 'multipart/form-data'
                 }
             });
 
