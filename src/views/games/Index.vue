@@ -1,10 +1,13 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
     import { notify } from '@kyvg/vue3-notification';
     import axios from 'axios';
     import SearchInput from '@/components/inputs/Search.vue';
-    import BeatenModal from '@/components/modals/AddBeatenGameModal.vue';
+    import BeatenModal from '@/components/modals/games/AddBeatenGameModal.vue';
+    import ListModal from '@/components/modals/games/AddGameToListModal.vue';
     import DateInput from '@/components/inputs/Birthdate.vue';
+    import SelectInput from '@/components/inputs/libraries/SelectLibrary.vue';
+    
     import 'primeicons/primeicons.css';
     
     const API_KEY = 'da6b190883654c9b91f542b733dc186c';
@@ -12,7 +15,17 @@
     const games = ref([]);
     const selectedGame = ref('');
     const date = ref('');
+    const status = ref([
+        { id: 1, name: 'To Play' },
+        { id: 2, name: 'Frozen' },
+        { id: 3, name: 'Playing' },
+        { id: 4, name: 'Beaten' },
+    ]);
+    const selectedStatus = ref('');
+    const selectedLibrary = ref('');
+    const libraries = ref([]);
     const isModalVisible = ref(false);
+    const isListModalVisible = ref(false);
 
     function openModal() {
         isModalVisible.value = true;
@@ -20,6 +33,14 @@
 
     function closeModal() {
         isModalVisible.value = false;
+    }
+
+    function openListModal() {
+        isListModalVisible.value = true;
+    }
+
+    function closeListModal() {
+        isListModalVisible.value = false;
     }
 
     async function fetchGames(){
@@ -31,6 +52,27 @@
         games.value = data.results || [];
     }
 
+    const fetchLibraries = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/libraries',
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                }
+            );
+            libraries.value = response.data;
+        } catch (error) {
+            console.error("Erro ao carregar as bibliotecas:", error);
+        }
+    };
+
+    onMounted(async () => {
+        await fetchLibraries();
+        console.log('Libraries: ', libraries.value);
+        console.log('Status: ', status.value);
+    });
+
     async function selectGame (game) { //Just to fetch the game description.
         const response = await fetch(`https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`);
         const gameDetails = await response.json();
@@ -40,7 +82,16 @@
     }
 
     async function addGame(isMain) {
-        console.log('Date: ', date.value);
+        console.log('Data: ', selectedStatus.value);
+
+        const libraryId = ref(0);
+
+        if(isMain === 1){
+            selectedStatus.value = 'Beaten';
+        }else{
+            libraryId.value = selectedLibrary.value.id;
+        }
+
         const data = {
             game: {
                 name: selectedGame.value.name,
@@ -73,8 +124,9 @@
             ],
             pivot: {
                 isMain: isMain,
-                status: 'Beaten',
+                status: selectedStatus.value.name,
                 beaten_at: date.value,
+                library_id: libraryId.value,
             },
         };
 
@@ -129,7 +181,7 @@
                         <p class="text-white text-lg font-bold">Genre: <span class="text-white font-normal">{{ selectedGame.genres.map((genre) => genre.name).join(', ') }}</span></p>
                     </div>
                     <div class="col-span-3 flex h-16 align-items justify-center">
-                        <button class="px-4 py-2 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white">
+                        <button @click="openListModal" class="px-4 py-2 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white">
                             <i class="pi pi-plus text-lg cursor-pointer mr-2"></i>
                             Add game to a list
                         </button>
@@ -155,5 +207,17 @@
                 </button>
             </template>
         </BeatenModal>
+        <ListModal :modalActive="isListModalVisible" @close-list-modal="closeListModal">
+            <template #default>
+                <DateInput v-model="date" label="Choose a date: " class="mt-8"/>
+                <div class="grid grid-cols-12 gap-4">
+                    <SelectInput v-model="selectedLibrary" :options="libraries" label="Choose a library: " class="mt-8"/>
+                    <SelectInput v-model="selectedStatus" :options="status" label="Choose a status: " class="mt-8" />
+                </div>
+                <button class="bg-gray-700 rounded-xl hover:bg-green-800 transition duration-300 text-white py-2 px-4 rounded mt-4" @click="addGame(0); closeListModal()">
+                    Add
+                </button>
+            </template>
+        </ListModal>
     </div>
 </template>

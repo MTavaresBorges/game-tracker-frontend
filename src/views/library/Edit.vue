@@ -6,8 +6,8 @@
     import NameInput from '@/components/inputs/libraries/Name.vue';
     import DescriptionInput from '@/components/inputs/libraries/Description.vue';
     import ImageInput from '@/components/inputs/libraries/Image.vue';
-    import GameInfoModal from '@/components/modals/GameInfoModal.vue';
-    import DisattachModal from '@/components/modals/DisattachGameModal.vue';
+    import GameInfoModal from '@/components/modals/games/GameInfoModal.vue';
+    import DisattachModal from '@/components/modals/libraries/DisattachGameModal.vue';
     import axios from 'axios';
 
     const library = ref({
@@ -103,7 +103,7 @@
             });
 
             
-            library.value = data;
+            library.value.name = data.name; // Just to update the name on the page.
         } catch (error) {
             console.error(error);
         }
@@ -137,7 +137,7 @@
             <form @submit.prevent="updateLibrary">
                 <NameInput v-model="name"/>
                 <DescriptionInput v-model="description" />
-                <ImageInput v-model="file"/>
+                <!-- <ImageInput v-model="file"/> -->
                 <button type="submit" class="w-[200px] bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300 text-white mt-8 py-2 px-6">
                     Update Library
                 </button>

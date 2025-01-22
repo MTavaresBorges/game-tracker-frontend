@@ -1,8 +1,8 @@
 <script setup>
     import { onMounted, ref } from 'vue';
     import { notify } from '@kyvg/vue3-notification';
-    import CreateModal from '@/components/modals/LibraryModal.vue';
-    import DeleteModal from '@/components/modals/DeleteLibraryModal.vue';
+    import CreateModal from '@/components/modals/libraries/LibraryModal.vue';
+    import DeleteModal from '@/components/modals/libraries/DeleteLibraryModal.vue';
     import NameInput from '@/components/inputs/libraries/Name.vue';
     import DescriptionInput from '@/components/inputs/libraries/Description.vue';
     import ImageInput from '@/components/inputs/libraries/Image.vue';
