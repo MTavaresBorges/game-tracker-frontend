@@ -81,6 +81,13 @@
         search.value = ''; //Just to make the search results dissapear.
     }
 
+    async function handleCreateLibrary(isMain) {
+        const isCreated = await addGame(isMain);
+        if (isCreated != false) {
+            closeListModal();
+        }
+    }
+
     async function addGame(isMain) {
         console.log('Data: ', selectedStatus.value);
 
@@ -89,7 +96,16 @@
         if(isMain === 1){
             selectedStatus.value = 'Beaten';
         }else{
-            libraryId.value = selectedLibrary.value.id;
+            if(!selectedLibrary.value || !selectedStatus.value){
+                notify({
+                    title: 'Please fill all fields',
+                    type: 'error',
+                });
+
+                return false;
+            }else{
+                libraryId.value = selectedLibrary.value.id;
+            }
         }
 
         const data = {
@@ -214,7 +230,7 @@
                     <SelectInput v-model="selectedLibrary" :options="libraries" label="Choose a library: " class="mt-8"/>
                     <SelectInput v-model="selectedStatus" :options="status" label="Choose a status: " class="mt-8" />
                 </div>
-                <button class="bg-gray-700 rounded-xl hover:bg-green-800 transition duration-300 text-white py-2 px-4 rounded mt-4" @click="addGame(0); closeListModal()">
+                <button class="bg-gray-700 rounded-xl hover:bg-green-800 transition duration-300 text-white py-2 px-4 rounded mt-4" @click="handleCreateLibrary(0);">
                     Add
                 </button>
             </template>
