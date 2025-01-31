@@ -1,16 +1,24 @@
 <script setup>
-import { ref, defineEmits, defineProps } from 'vue';
-
-const birthdate = ref('');
+import { ref, defineEmits, defineProps, watch } from 'vue';
 
 const props = defineProps({
     label: {
         type: String,
         required: true,
     },
+    modelValue: String,
 });
 
 const emit = defineEmits();
+
+const birthdate = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    birthdate.value = newValue;
+  }
+);
 
 const updateValue = () => {
     emit('update:modelValue', birthdate.value);

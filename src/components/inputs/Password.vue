@@ -1,9 +1,20 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, defineProps, watch } from 'vue';
 
-const password = ref('');
+const props = defineProps({
+    modelValue: String,
+});
 
 const emit = defineEmits();
+
+const password = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    password.value = newValue;
+  }
+);
 
 const updateValue = () => {
     emit('update:modelValue', password.value);

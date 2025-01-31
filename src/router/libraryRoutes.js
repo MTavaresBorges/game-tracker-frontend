@@ -1,5 +1,5 @@
-import LibraryIndex from '@/views/library/Index.vue';
-import LibraryEdit from '@/views/library/Edit.vue';
+import LibraryIndex from '@/views/libraries/Index.vue';
+import LibraryEdit from '@/views/libraries/Edit.vue';
 
 export default [
     {

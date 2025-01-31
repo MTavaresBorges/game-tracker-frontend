@@ -76,7 +76,6 @@
     async function selectGame (game) { //Just to fetch the game description.
         const response = await fetch(`https://api.rawg.io/api/games/${game.id}?key=${API_KEY}`);
         const gameDetails = await response.json();
-        console.log(gameDetails);
         selectedGame.value = { ...game, description: gameDetails.description_raw, developers: gameDetails.developers, publishers: gameDetails.publishers };
         search.value = ''; //Just to make the search results dissapear.
     }

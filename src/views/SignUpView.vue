@@ -117,8 +117,8 @@
             </div>
         </div>
         <form @submit.prevent="submitForm" class="bg-gray-800 grid grid-cols-12 gap-4 items-center rounded-xl shadow-lg mt-10 w-[40%] mx-auto p-6">
-            <FullnameInput v-model="fullname" />
-            <UsernameInput v-model="username" />
+            <FullnameInput v-model="fullname" col-span="12"/>
+            <UsernameInput v-model="username" col-span="6"/>
             <PasswordInput v-model="password" />
             <EmailInput v-model="email" />
             <BirthdateInput v-model="birthdate" label="Birthdate" />
