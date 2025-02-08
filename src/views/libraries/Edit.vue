@@ -59,12 +59,27 @@
         }catch(error){
             console.error(error);
         }
+
+        console.log(library.value.games[0].libraries[0].pivot.status);
     });
 
     function formatDate(date) {
         if (!date) return '';
         const parsedDate = new Date(date);
         return parsedDate.toLocaleDateString('en-US');
+    }
+
+    async function loadLibrary(id){
+        try{
+            const response = await axios.get(`http://127.0.0.1:8000/api/libraries/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            library.value = response.data;
+        }catch(error){
+            console.error(error);
+        }
     }
 
     async function updateLibrary() {
@@ -109,9 +124,9 @@
         }
     }
 
-    async function removeGame(id){
+    async function removeGame(gameId, libraryId){
         try{
-            const response = await axios.delete(`http://127.0.0.1:8000/api/games/${id}`, {
+            const response = await axios.delete(`http://127.0.0.1:8000/api/games/${gameId}/library/${libraryId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -122,7 +137,8 @@
                 type: 'success',
             });
 
-            library.value.games = library.value.games.filter(game => game.id !== id); //TODO: Use an axios function instead of this.
+            await loadLibrary(libraryId);
+            
             console.log(response.data);
         }catch(error){
             console.error(error);
@@ -158,6 +174,7 @@
                         <th class="p-2">Release Date</th>
                         <th class="p-2">Age Rating</th>
                         <th class="p-2">Added At</th>
+                        <th class="p-2">Status</th>
                         <th class="p-2">Actions</th>
                     </tr>
                 </thead>
@@ -167,6 +184,7 @@
                         <td class="p-2">{{ formatDate(game.release_date) }}</td>
                         <td class="p-2">{{ game.age_rating }}</td>
                         <td class="p-2">{{ formatDate(game.created_at) }}</td>
+                        <td class="p-2">{{ game.libraries[0].pivot.status.charAt(0).toUpperCase() + game.libraries[0].pivot.status.slice(1) }}</td>
                         <td class="p-2">
                             <button @click="openGameInfoModal(game.description)" class="px-4 py-2 mr-3 bg-gray-700 rounded-xl hover:bg-gray-600 transition duration-300">
                                 <i class="pi pi-info-circle text-xl cursor-pointer"></i>
@@ -186,7 +204,7 @@
         </GameInfoModal>
         <DisattachModal :modalActive="isDisattachModalVisable" @close-modal="closeDisattachModal">
             <template #default>
-                <button class="mr-1 col-span-6 bg-gray-700 rounded-xl hover:bg-red-800 transition duration-300 text-white mt-8 py-2 px-6" @click="removeGame(toBeDeletedGameId); closeDisattachModal()">
+                <button class="mr-1 col-span-6 bg-gray-700 rounded-xl hover:bg-red-800 transition duration-300 text-white mt-8 py-2 px-6" @click="removeGame(toBeDeletedGameId, library.id); closeDisattachModal()">
                     Delete
                 </button>
             </template>

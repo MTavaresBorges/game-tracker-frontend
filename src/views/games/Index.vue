@@ -88,12 +88,12 @@
     }
 
     async function addGame(isMain) {
-        console.log('Data: ', selectedStatus.value);
+        // console.log('Data: ', selectedStatus.value);
 
         const libraryId = ref(0);
 
         if(isMain === 1){
-            selectedStatus.value = 'Beaten';
+            selectedStatus.value = 'beaten';
         }else{
             if(!selectedLibrary.value || !selectedStatus.value){
                 notify({
@@ -104,8 +104,11 @@
                 return false;
             }else{
                 libraryId.value = selectedLibrary.value.id;
+                selectedStatus.value = selectedStatus.value.name;
             }
         }
+
+        console.log(selectedStatus.value);
 
         const data = {
             game: {
@@ -139,7 +142,7 @@
             ],
             pivot: {
                 isMain: isMain,
-                status: selectedStatus.value.name,
+                status: selectedStatus.value,
                 beaten_at: date.value,
                 library_id: libraryId.value,
             },
